@@ -1,0 +1,111 @@
+/* Design Tokens for BacklinkForge Dark Theme */
+:root {
+  /* Colors */
+  --bg-primary: #0b0f14;                /* Main background */
+  --bg-surface: #0f1720;                /* Card/surface background */
+  --bg-elevated: #1a2332;               /* Elevated surface */
+  --bg-hover: #1e293b;                  /* Hover state background */
+  
+  --text-primary: #ffffff;              /* Primary text */
+  --text-secondary: #e2e8f0;            /* Secondary text */
+  --text-muted: #a8b3bf;                /* Muted text */
+  --text-disabled: #64748b;             /* Disabled text */
+  
+  --accent-primary: #7c3aed;            /* Primary accent (purple) */
+  --accent-hover: #6b21a8;              /* Hover state */
+  --accent-light: #a855f7;              /* Light accent */
+  --accent-dark: #581c87;               /* Dark accent */
+  
+  --success: #10b981;                   /* Success color */
+  --warning: #f59e0b;                   /* Warning color */
+  --error: #ef4444;                     /* Error color */
+  --info: #3b82f6;                      /* Info color */
+  
+  --border-color: #1e293b;              /* Borders */
+  --border-light: #334155;              /* Light borders */
+  --border-focus: #7c3aed;              /* Focus border */
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;                /* 4px */
+  --spacing-sm: 0.5rem;                 /* 8px */
+  --spacing-md: 1rem;                   /* 16px */
+  --spacing-lg: 1.5rem;                 /* 24px */
+  --spacing-xl: 2rem;                   /* 32px */
+  --spacing-2xl: 3rem;                  /* 48px */
+  
+  /* Border Radius */
+  --radius-sm: 6px;                     /* Small radius */
+  --radius-md: 12px;                    /* Medium radius */
+  --radius-lg: 16px;                    /* Large radius */
+  --radius-xl: 24px;                    /* Extra large radius */
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  /* Typography */
+  --font-size-xs: 0.75rem;              /* 12px */
+  --font-size-sm: 0.875rem;             /* 14px */
+  --font-size-base: 1rem;               /* 16px */
+  --font-size-lg: 1.125rem;             /* 18px */
+  --font-size-xl: 1.25rem;              /* 20px */
+  --font-size-2xl: 1.5rem;              /* 24px */
+  --font-size-3xl: 1.875rem;            /* 30px */
+  
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 250ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
+  
+  /* Z-index */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+}
+
+/* Dark theme specific overrides */
+.dark {
+  --bg-primary: #0b0f14;
+  --bg-surface: #0f1720;
+  --bg-elevated: #1a2332;
+  --bg-hover: #1e293b;
+  
+  --text-primary: #ffffff;
+  --text-secondary: #e2e8f0;
+  --text-muted: #a8b3bf;
+  --text-disabled: #64748b;
+  
+  --border-color: #1e293b;
+  --border-light: #334155;
+}
+
+/* Utility classes for design tokens */
+.bg-primary { background-color: var(--bg-primary); }
+.bg-surface { background-color: var(--bg-surface); }
+.bg-elevated { background-color: var(--bg-elevated); }
+.bg-hover { background-color: var(--bg-hover); }
+
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-muted { color: var(--text-muted); }
+.text-disabled { color: var(--text-disabled); }
+
+.border-color { border-color: var(--border-color); }
+.border-light { border-color: var(--border-light); }
+.border-focus { border-color: var(--border-focus); }
+
+.accent-primary { color: var(--accent-primary); }
+.accent-hover { color: var(--accent-hover); }
+.accent-light { color: var(--accent-light); }
+.accent-dark { color: var(--accent-dark); }
+
+.success { color: var(--success); }
+.warning { color: var(--warning); }
+.error { color: var(--error); }
+.info { color: var(--info); } 

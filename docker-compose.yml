@@ -1,0 +1,167 @@
+version: '3.8'
+
+services:
+  # Laravel Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backlinkforge-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - backlinkforge-network
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - DB_HOST=mysql
+      - DB_DATABASE=backlinkforge
+      - DB_USERNAME=root
+      - DB_PASSWORD=password
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=
+      - QUEUE_CONNECTION=redis
+      - CACHE_DRIVER=redis
+      - SESSION_DRIVER=redis
+      - SESSION_LIFETIME=120
+
+  # Nginx Web Server
+  nginx:
+    image: nginx:alpine
+    container_name: backlinkforge-nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - backlinkforge-network
+    depends_on:
+      - app
+
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: backlinkforge-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: backlinkforge
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: backlinkforge
+      MYSQL_PASSWORD: password
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - backlinkforge-network
+
+  # Redis Cache & Queue
+  redis:
+    image: redis:7-alpine
+    container_name: backlinkforge-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - backlinkforge-network
+
+  # Node.js Automation Service
+  node-automation:
+    build:
+      context: ./node-automation
+      dockerfile: Dockerfile
+    container_name: backlinkforge-automation
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./node-automation:/app
+      - /app/node_modules
+    networks:
+      - backlinkforge-network
+    environment:
+      - NODE_ENV=development
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - LARAVEL_APP_URL=http://app:8000
+    depends_on:
+      - redis
+
+  # Laravel Horizon (Queue Monitor)
+  horizon:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backlinkforge-horizon
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - backlinkforge-network
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - APP_ENV=local
+      - DB_HOST=mysql
+      - DB_DATABASE=backlinkforge
+      - DB_USERNAME=root
+      - DB_PASSWORD=password
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=
+      - QUEUE_CONNECTION=redis
+    command: php artisan horizon
+
+  # MinIO (S3-compatible storage for development)
+  minio:
+    image: minio/minio:latest
+    container_name: backlinkforge-minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+    networks:
+      - backlinkforge-network
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+
+  # MailHog (Email testing)
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: backlinkforge-mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - backlinkforge-network
+
+volumes:
+  mysql-data:
+    driver: local
+  redis-data:
+    driver: local
+  minio-data:
+    driver: local
+
+networks:
+  backlinkforge-network:
+    driver: bridge 
